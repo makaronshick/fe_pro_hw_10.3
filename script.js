@@ -25,19 +25,19 @@ const contactsBoock = {
       email: "Felix@gmail.com",
     },
   ],
+  findByName(name) {
+    const user = this.contacts.find(
+      (item) => item.name.toUpperCase() === name.toUpperCase()
+    );
+  
+    return user || `User with name "${name}" not found`;
+  },
+  addContact(newContact) {  
+    this.contacts.push(newContact);
+  }
 };
 
-function findByName(contactsBoock, name) {
-  const user = contactsBoock.contacts.find(
-    (item) => item.name.toUpperCase() === name.toUpperCase()
-  );
-
-  return typeof user === "undefined"
-    ? `User with name "${name}" not found`
-    : user;
-}
-
-function AddContact(contactsBoock) {
+function getContactFromUser() {
   const name = prompt("Enter name");
 
   if (!name?.trim()) {
@@ -50,8 +50,10 @@ function AddContact(contactsBoock) {
   if (
     !phone?.trim() ||
     !Number.isInteger(+phone) ||
-    phone.length < 11 ||
-    phone.length > 11
+    phone.trim().length < 11 ||
+    phone.trim().length > 11 ||
+    +phone < 0 ||
+    !phone.startsWith('0')
   ) {
     alert("Incorrect phone number. Bye!");
     return;
@@ -73,15 +75,19 @@ function AddContact(contactsBoock) {
     return;
   }
 
-  contactsBoock.contacts.push({
+  return {
     name: name,
     phone: phone,
     email: email,
-  });
+  };
 }
 
-AddContact(contactsBoock);
+const newContact = getContactFromUser();
+if (newContact) {
+  contactsBoock.addContact(newContact);
+}
+
 console.log(contactsBoock);
 
-const user = findByName(contactsBoock, 'felix');
-console.log(user);
+const foundedUser = contactsBoock.findByName('lolita');
+console.log(foundedUser);
